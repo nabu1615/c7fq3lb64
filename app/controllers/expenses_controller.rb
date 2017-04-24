@@ -1,8 +1,12 @@
 class ExpensesController < ApplicationController
   def index
      @expenses = Expense.order("date DESC")
-     if params[:concept].present?
+     if params[:concept].present? && !params[:category_id].present?
      	@expenses = @expenses.where("concept LIKE :concept", concept: "%#{params[:concept]}%")
+     	elsif params[:concept].present? && params[:category_id].present?
+     		@expenses = @expenses
+     		.where("concept LIKE :concept", concept: "%#{params[:concept]}%")
+     		.where("category_id = #{params[:category_id]}")
      	elsif params[:category_id].present?
      		@expenses = @expenses.where("category_id = #{params[:category_id]}")
      end
